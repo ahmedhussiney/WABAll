@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><snippets><snippet name="defines"><![CDATA[
+	#ifdef GL_ES
+	precision mediump float;
+	#endif
+	#define Epsilon 		1e-6
+	#define PI 					3.14159265358979323846264338327950288
+	#define EarthRadius 6378137.0
+	#define DegPerRad 	57.295779513082320
+	#define RadPerDeg 	0.017453292519943
+]]></snippet><snippet name="linearInterpolator"><![CDATA[
+	float getLinearValue(vec2 b,float c){if(b[1]==b[0]) return 0.0;else{return (c-b[0])/(b[1]-b[0]);}}float getScope(vec2 e,float f){return e[0]+(e[1]-e[0])*f;}
+]]></snippet><snippet name="lonlatDistance"><![CDATA[
+	float getDistanceOfTwoLonLat(vec2 b,vec2 c){float d=RadPerDeg*(b.y);float e=RadPerDeg*(c.y);float f=RadPerDeg*(c.y-b.y);float g=RadPerDeg*(c.x-b.x);float h=sin(f/2.0)*sin(f/2.0)+cos(d)*cos(e)*sin(g/2.0)*sin(g/2.0);float i=2.0*atan2(sqrt(h),sqrt(1.0-h));return EarthRadius*i;}
+]]></snippet><snippet name="transparentFunc"><![CDATA[
+	#extension GL_OES_standard_derivatives : enable
+	float edgeFactor(float b,float c){vec3 c=fwidth(b);vec3 d=smoothstep(vec3(0.0),c*1.5,b);return min(min(d.x,d.y),d.z);}
+]]></snippet><snippet name="float2rgba"><![CDATA[
+	vec4 float2rgba(float b){float c=floor(b*256.0)/255.0;float d=floor(fract(b*256.0)*256.0)/255.0;float e=floor(fract(b*65536.0)*256.0)/255.0;float f=1.0;return vec4(c,d,e,f);}
+]]></snippet><snippet name="getHSVColor"><![CDATA[
+	vec4 getHSVColor(float b,float c,float d){vec3 e=vec3(1.0,1.0,0.0);float f=b/60.0;float g=floor(f);float h=f-g;float i=d*(1.0-c);float j=d*(1.0-c*h);float k=d*(1.0-c*(1.0-h));if(g<0.5) e=vec3(d,k,i);else if(g<1.5) e=vec3(j,d,i);else if(g<2.5) e=vec3(i,d,k);else if(g<3.5) e=vec3(i,j,d);else if(g<4.5) e=vec3(k,i,d);else e=vec3(d,i,j);return vec4(e,0.7);}
+]]></snippet><snippet name="convertHSLtoRGB"><![CDATA[
+	vec4 convertHSLtoRGB(vec4 b){const float c=1.0/3.0;const float d=2.0/3.0;const float e=6.0;float f=b.x;float g=b.y;float h=b.z;vec3 i=vec3(e*(f-d),0.0,e*(1.0-f));if(f<d){i.r=0.0;i.g=e*(d-f);i.b=e*(f-c);}if(f<c){i.r=e*(c-f);i.g=e*f;i.b=0.0;}i=min(i,1.0);float j=2.0*g;float k=1.0-g;float l=1.0-h;float m=(2.0*h)-1.0;vec3 n=(j*i)+k;vec3 o;if(h>=0.5) o=(l*n)+m;else o=h*n;return vec4(o,b.a);}
+]]></snippet><snippet name="lonlat2position"><![CDATA[
+	vec3 lonlat2position(vec3 b){float c=RadPerDeg*(b.x);float d=RadPerDeg*(b.y);float e=cos(d);float f=EarthRadius+b.z;float g=cos(c)*e*f;float h=sin(c)*e*f;float i=sin(d)*f;return vec3(g,h,i);}vec3 position2lonlat(vec3 k){float l=length(k);float m=asin(k.z/l);float e=cos(m);float n=-1.0;if(k.y>0.0){n=1.0;}float o=n*acos(k.x/(e*l));float c=DegPerRad*(o);float d=DegPerRad*(m);return vec3(c,d,l-EarthRadius);}mat4 toRotationMat(mat4 q){mat4 r=mat4(1.0);r[0]=q[0];r[1]=q[1];r[2]=q[2];return r;}
+]]></snippet><snippet name="rotateFromToMat"><![CDATA[
+	mat4 rotateFromTo(vec3 b,vec3 c){mat4 d=mat4(1.0);vec3 e=normalize(b);vec3 f=normalize(c);float g=dot(e,f);float h=sqrt(1.0-g*g);float i=1.0-g;vec3 j=cross(e,f);j=normalize(j);float k=j.k,l=j.l,m=j.m;float n=d[0].k,o=d[0].l,p=d[0].m,q=d[0].w,r=d[1].k,s=d[1].l,t=d[1].m,u=d[1].w,v=d[2].k,w=d[2].l,x=d[2].m,y=d[2].w;float z=k*k*i+g,A=l*k*i+m*h,B=m*k*i-l*h,C=k*l*i-m*h,D=l*l*i+g,E=m*l*i+k*h,F=k*m*i+l*h,G=l*m*i-k*h,H=m*m*i+g;d[0].k=n*z+r*A+v*B;d[0].l=o*z+s*A+w*B;d[0].m=p*z+t*A+x*B;d[0].w=q*z+u*A+y*B;d[1].k=n*C+r*D+v*E;d[1].l=o*C+s*D+w*E;d[1].m=p*C+t*D+x*E;d[1].w=q*C+u*D+y*E;d[2].k=n*F+r*G+v*H;d[2].l=o*F+s*G+w*H;d[2].m=p*F+t*G+x*H;d[2].w=q*F+u*G+y*H;return d;}
+]]></snippet><snippet name="translationMat"><![CDATA[
+	$lonlat2position
+	mat4 rotateX(mat4 b,float c){mat4 d=b;float e=sin(c);float f=cos(c);float g=b[1].x,h=b[1].y,i=b[1].z,j=b[1].w,k=b[2].x,l=b[2].y,m=b[2].z,n=b[2].w;d[1].x=g*f+k*e;d[1].y=h*f+l*e;d[1].z=i*f+m*e;d[1].w=j*f+n*e;d[2].x=g*(-e)+k*f;d[2].y=h*(-e)+l*f;d[2].z=i*(-e)+m*f;d[2].w=j*(-e)+n*f;return d;}mat4 rotateY(mat4 b,float c){mat4 d=b;float e=sin(c);float f=cos(c);float p=b[0].x,q=b[0].y,r=b[0].z,s=b[0].w,k=b[2].x,l=b[2].y,m=b[2].z,n=b[2].w;d[0].x=p*f+k*(-e);d[0].y=q*f+l*(-e);d[0].z=r*f+m*(-e);d[0].w=s*f+n*(-e);d[2].x=p*e+k*f;d[2].y=q*e+l*f;d[2].z=r*e+m*f;d[2].w=s*e+n*f;return d;}mat4 getTransMat(vec3 u){mat4 v=mat4(1.0);float w=RadPerDeg*(u.x);float x=RadPerDeg*(u.y);float y=sin(w),z=cos(w),A=sin(x),B=cos(x);v[0].x=-y;v[1].x=-A*z;v[2].x=B*z;v[0].y=z;v[1].y=-A*y;v[2].y=B*y;v[0].z=0.0;v[1].z=B;v[2].z=A;v[0].w=0.0;v[1].w=0.0;v[2].w=0.0;v[3].xyz=lonlat2position(u);v[3].w=1.0;return v;}vec3 rotateOnAxis(vec3 D,float c,vec3 E){vec3 F;float G=c*0.5;float e=sin(G);float H=cos(G);float I=e*D[0];float J=e*D[1];float K=e*D[2];float L=E[0],M=E[1],N=E[2];float O=H*L+J*N-K*M,P=H*M+K*L-I*N,Q=H*N+I*M-J*L,R=-I*L-J*M-K*N;F[0]=O*H+R*-I+P*-K-Q*-J;F[1]=P*H+R*-J+Q*-I-O*-K;F[2]=Q*H+R*-K+O*-J-P*-I;return F;}
+]]></snippet><snippet name="localTrans"><![CDATA[
+	vec3 wgs84ToWebMerc(vec3 b){float c=0.4999999*PI;float d=b[1]*RadPerDeg;d=clamp(d,-c,c);float e=sin(d);float f=RadPerDeg*b[0]*EarthRadius;float g=EarthRadius*0.5*log((1.0+e)/(1.0-e));float h=b[2];return vec3(f,g,h);}
+]]></snippet><snippet name="expoEaseOut"><![CDATA[
+	float getExpoEaseOutValue(float b,float c,float d,float e){float f=d-c;return (abs(b-e)<Epsilon)?d:(f*(-pow(2.0,-10.0*b/e)+1.0)+c);}float getExpoEaseInValue(float b,float c,float d,float e){float f=d-c;return (abs(b)<Epsilon)?c:(f*pow(2.0,10.0*(b/e-1.0))+c);}
+]]></snippet><snippet name="circEaseOut"><![CDATA[
+	float getCircEaseOutValue(float b,float c,float d,float e){float f=d-c;float g=b/e-1.0;return f*sqrt(1.0-g*g)+c;}
+]]></snippet><snippet name="cubicEaseOut"><![CDATA[
+	float getCubicEaseInOutValue(float b,float c,float d,float e){float f=d-c;if((b/=e/2.0)<1.0) return f/2.0*pow(b,3.0)+c;return f/2.0*((b-=2.0)*pow(b,2.0)+2.0)+c;}
+]]></snippet><snippet name="quintEaseOut"><![CDATA[
+	float getQuintEaseInOutValue(float b,float c,float d,float e){float f=d-c;if((b/=e/2.0)<1.0) return f/2.0*pow(b,5.0)+c;return f/2.0*((b-=2.0)*pow(b,4.0)+2.0)+c;}
+]]></snippet><snippet name="backEaseIn"><![CDATA[
+	float getBackEaseInValue(float b,float c,float d,float e){float f=d-c;float g=1.70158;float h=b/e;return f*(h*h)*((g+1.0)*h-g)+c;}
+]]></snippet><snippet name="elasticEaseIn"><![CDATA[
+	float getElasticEaseInValue(float b,float c,float d,float e){float f=d-c;float g=e*0.3;float h=f;float i=g/4.0;float j=b-1.0;return -(h*pow(2.0,10.0*j)*sin((j*e-i)*(2.0*PI)/g))+c;}
+]]></snippet><snippet name="bounceEaseOut"><![CDATA[
+	float getBounceEaseOutValue(float b,float c,float d,float e){float f=d-c;if((b/=e)<(1.0/2.75)) return f*(7.5625*b*b)+c;else if(b<(2.0/2.75)) return f*(7.5625*(b-=(1.5/2.75))*b+0.75)+c;else if(b<(2.5/2.75)) return f*(7.5625*(b-=(2.25/2.75))*b+0.9375)+c;else return f*(7.5625*(b-=(2.625/2.75))*b+0.984375)+c;}float getBounceEaseInValue(float b,float c,float d,float e){return d-getBounceEaseOutValue(e-b,0.0,d,e)+c;}
+]]></snippet><snippet name="quadVS"><![CDATA[
+	attribute vec2 $auxpos1;attribute vec2 $auxpos2;varying vec2 texCoord;void main(void){texCoord=$auxpos2;gl_Position=vec4($auxpos1,0.0,1.0);}
+]]></snippet><snippet name="quadFS"><![CDATA[
+	#ifdef GL_ES
+	precision mediump float;
+	#endif
+
+	uniform sampler2D quadTex;varying vec2 texCoord;void main(void){gl_FragColor=texture2D(quadTex,texCoord);}
+]]></snippet><snippet name="packDepth"><![CDATA[
+	#ifdef GL_ES
+	precision mediump float;
+	#endif
+
+	vec4 packDepth(const in mediump float b){const mediump vec4 c=vec4(256.0,256.0*256.0,256.0*256.0*256.0,256.0*256.0*256.0*256.0);vec4 d=b*c;d.x=min(d.x+1.0,255.0);d=fract(floor(d)/256.0);return d;}
+]]></snippet><snippet name="curveInter"><![CDATA[
+	float b3p0(float b,float c){float d=1.0-b;return pow(d,3.0)*c;}float b3p1(float b,float c){float d=1.0-b;return 3.0*pow(d,2.0)*b*c;}float b3p2(float b,float c){float d=1.0-b;return 3.0*d*pow(b,2.0)*c;}float b3p3(float b,float c){return pow(b,3.0)*c;}float b3(float b,float i,float j,float k,float l){return b3p0(b,i)+b3p1(b,j)+b3p2(b,k)+b3p3(b,l);}vec3 getPoint(float b,vec3 n,vec3 o,vec3 p,vec3 q){float r,s,t;r=b3(b,n.x,o.x,p.x,q.x);s=b3(b,n.y,o.y,p.y,q.y);t=b3(b,n.z,o.z,p.z,q.z);return vec3(r,s,t);}
+]]></snippet></snippets>

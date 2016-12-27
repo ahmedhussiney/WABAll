@@ -1,0 +1,13 @@
+{
+  "name": "AddExternaLayer",
+  "platform": "HTML",
+  "version": "2.1",
+  "wabVersion": "2.1",
+  "author": "Ahmed Hussiney",
+  "description": "This Widget is used as Demo",
+  "copyright": "@Esrinea 2016",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties":{
+	
+  }
+}

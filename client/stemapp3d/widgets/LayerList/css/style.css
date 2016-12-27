@@ -1,0 +1,39 @@
+.jimu-widget-layerlist .layers-table{
+  width: 100%;
+}
+
+.jimu-widget-layerlist .jimu-widget-layeritem.not-loaded{
+	display: none;
+}
+
+.jimu-widget-layerlist .jimu-widget-layeritem .layeritem-table{
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.jimu-widget-layerlist .jimu-widget-layeritem .layeritem-table td{
+	height: 30px;
+	line-height: 30px;
+}
+
+.jimu-widget-layerlist .jimu-widget-layeritem .jimu-checkbox .checkbox{
+	position: relative;
+	top: 5px;
+}
+
+.jimu-widget-layerlist .jimu-widget-layeritem .zoom{
+	display: none;
+	width: 40px;
+	height: 30px;
+	background: url(images/zoom.png) no-repeat -15px -12px;
+	cursor: pointer;
+}
+
+.jimu-widget-layerlist .jimu-widget-layeritem:hover .zoom{
+	display: block;
+}
+
+.jimu-widget-layerlist .jimu-widget-layeritem .zoom:hover{
+	background-position: -15px -66px;
+}
